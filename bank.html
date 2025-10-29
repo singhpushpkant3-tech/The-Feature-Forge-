@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Banking System Demo</title>
+    <style>
+        body {
+            background: #e6ecf3;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #222;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .center-box {
+            margin: auto;
+            margin-top: 50px;
+            width: 380px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0,80,160,0.13);
+            padding: 32px 28px 28px 28px;
+            display: none;
+        }
+        .center-box.active { display: block; }
+        h2, h3 { color: #336699; text-align: center; font-weight: 600; margin-bottom: 12px; }
+        .menu-btns { display: flex; gap: 18px; justify-content: center; margin-top: 36px; }
+        .menu-btns button {
+            background: linear-gradient(90deg, #1369d6 40%, #9daaf2);
+            color: #fff;
+            font-size: 1.12em;
+            font-weight: 500;
+            border: none;
+            border-radius: 6px;
+            padding: 16px 38px;
+            transition: box-shadow 0.3s;
+            box-shadow: 0 2px 6px #adc;
+            cursor: pointer;
+        }
+        .menu-btns button:hover { box-shadow: 0 6px 12px #adc; opacity:0.93;}
+        label {display:block; margin-top:18px;}
+        input[type="text"], input[type="number"], input[type="email"], input[type="password"], select {
+            width:100%; padding:9px; border:1px solid #8FA7CE; border-radius:4px; margin-top:6px;
+            font-size: 1.05em; background:#f8faff;
+        }
+        button {
+            margin-top: 20px; padding:10px 20px; background:#336699;
+            color:white; border:none; border-radius:6px; cursor:pointer;
+            font-size:1em; box-shadow: 0 1px 3px #ddd;
+        }
+        button:hover {background:#26517a;}
+        .success {color:#20af38; margin-top:12px;}
+        .error { color: #e74c3c; margin-top:12px;}
+        .actions { display: flex; gap:8px; margin-top:18px; flex-wrap: wrap; justify-content: center;}
+        .actions button { background: #9daaf2; color: #336699; border-radius: 5px; padding: 8px 14px; box-shadow: none; }
+        .actions button:hover { background: #d8e6fb;}
+        .back-btn {margin-top:10px; background: #eaefff; color: #558; font-weight:500}
+        #userInfo { border:1px solid #9daaf2; border-radius:8px; padding:15px; background:#f8faff; margin-top:10px; }
+        .field-choice { margin-top:16px; }
+    </style>
+</head>
+<body>
+    <div class="center-box active" id="menuDiv">
+        <h2>Banking System Demo</h2>
+        <div class="menu-btns">
+            <button type="button" id="btnCreate">Create Account</button>
+            <button type="button" id="btnLogin">Login</button>
+        </div>
+    </div>
+
+    <div class="center-box" id="accountFormDiv">
+        <h3>Create Account</h3>
+        <form id="accountForm">
+            <label>Name: <input type="text" id="name" required></label>
+            <label>Age: <input type="number" id="age" required min="16"></label>
+            <label>Address: <input type="text" id="address" required></label>
+            <label>Email: <input type="email" id="email" required></label>
+            <label>Phone: <input type="text" id="phone" required maxlength="10"></label>
+            <label>ATM Pin: <input type="password" id="pin" required maxlength="4"></label>
+            <label>Initial Amount: <input type="number" id="amount" required min="0"></label>
+            <button type="submit">Create Account</button>
+            <button type="button" class="back-btn" id="backToMenu1">⬅ Back</button>
+        </form>
+        <div id="createMsg"></div>
+    </div>
+
+    <div class="center-box" id="loginDiv">
+        <h3>Login</h3>
+        <form id="loginForm">
+            <label>Email: <input type="email" id="loginEmail" required></label>
+            <label>ATM Pin: <input type="password" id="loginPin" required maxlength="4"></label>
+            <button type="submit">Login & Show Info</button>
+            <button type="button" class="back-btn" id="backToMenu2">⬅ Back</button>
+        </form>
+        <div id="loginMsg"></div>
+    </div>
+
+    <div class="center-box" id="userInfoDiv">
+        <h3>Account Info</h3>
+        <div id="userInfo"></div>
+        <div class="actions">
+            <button type="button" id="btnPin">Update ATM Pin</button>
+            <button type="button" id="btnDeposit">Deposit</button>
+            <button type="button" id="btnWithdraw">Withdraw</button>
+            <button type="button" id="btnDetails">Update Details</button>
+            <button type="button" id="btnLogout">Logout</button>
+        </div>
+    </div>
+
+    <div class="center-box" id="updatePinDiv">
+        <h3>Update ATM Pin</h3>
+        <form id="pinForm">
+            <label>Old Pin: <input type="password" id="oldPin" required maxlength="4"></label>
+            <label>New Pin: <input type="password" id="newPin" required maxlength="4"></label>
+            <button type="submit">Update Pin</button>
+            <button type="button" class="back-btn" id="backToUser1">⬅ Back</button>
+        </form>
+        <div id="pinMsg"></div>
+    </div>
+
+    <div class="center-box" id="depositDiv">
+        <h3>Deposit</h3>
+        <form id="depositForm">
+            <label>Deposit Amount: <input type="number" id="depositAmt" required min="1"></label>
+            <button type="submit">Deposit</button>
+            <button type="button" class="back-btn" id="backToUser2">⬅ Back</button>
+        </form>
+        <div id="depositMsg"></div>
+    </div>
+
+    <div class="center-box" id="withdrawDiv">
+        <h3>Withdraw</h3>
+        <form id="withdrawForm">
+            <label>Withdraw Amount: <input type="number" id="withdrawAmt" required min="1"></label>
+            <button type="submit">Withdraw</button>
+            <button type="button" class="back-btn" id="backToUser3">⬅ Back</button>
+        </form>
+        <div id="withdrawMsg"></div>
+    </div>
+
+    <div class="center-box" id="updateDetailsDiv">
+        <h3>Update Details</h3>
+        <form id="detailsForm">
+            <div class="field-choice">
+                <label>Choose field to update:</label>
+                <select id="fieldSelect" onchange="enableField()">
+                    <option value="">--Select--</option>
+                    <option value="name">Name</option>
+                    <option value="age">Age</option>
+                    <option value="address">Address</option>
+                    <option value="phone">Phone</option>
+                </select>
+            </div>
+            <label>Name: <input type="text" id="updateName" disabled></label>
+            <label>Age: <input type="number" id="updateAge" disabled min="16"></label>
+            <label>Address: <input type="text" id="updateAddress" disabled></label>
+            <label>Phone: <input type="text" id="updatePhone" disabled maxlength="10"></label>
+            <button type="submit">Update</button>
+            <button type="button" class="back-btn" id="backToUser4">⬅ Back</button>
+        </form>
+        <div id="detailsMsg"></div>
+    </div>
+
+    <script>
+    let user = null, loggedIn = false;
+    function saveUser(newUser) { user = newUser; }
+    function getUser() { return user; }
+
+    function showSection(id) {
+        document.querySelectorAll(".center-box").forEach(e=>e.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+        if (id === "userInfoDiv") showUserInfo();
+        if (id === "updateDetailsDiv") resetDetailsForm();
+    }
+    function backToMenu() { showSection('menuDiv'); }
+    function backToUser() { showSection("userInfoDiv"); }
+
+    // BUTTON HOOKS (menu)
+    document.getElementById("btnCreate").onclick = ()=>showSection('accountFormDiv');
+    document.getElementById("btnLogin").onclick = ()=>showSection('loginDiv');
+    document.getElementById("backToMenu1").onclick = backToMenu;
+    document.getElementById("backToMenu2").onclick = backToMenu;
+    document.getElementById("backToUser1").onclick = backToUser;
+    document.getElementById("backToUser2").onclick = backToUser;
+    document.getElementById("backToUser3").onclick = backToUser;
+    document.getElementById("backToUser4").onclick = backToUser;
+
+    // Action buttons after login
+    document.getElementById("btnPin").onclick = ()=>showSection("updatePinDiv");
+    document.getElementById("btnDeposit").onclick = ()=>showSection("depositDiv");
+    document.getElementById("btnWithdraw").onclick = ()=>showSection("withdrawDiv");
+    document.getElementById("btnDetails").onclick = ()=>showSection("updateDetailsDiv");
+    document.getElementById("btnLogout").onclick = backToMenu;
+
+    // Create Account
+    document.getElementById("accountForm").onsubmit = function(e){
+        e.preventDefault();
+        user = {
+            name: document.getElementById("name").value,
+            age: document.getElementById("age").value,
+            address: document.getElementById("address").value,
+            email: document.getElementById("email").value,
+            phone: document.getElementById("phone").value,
+            pin: document.getElementById("pin").value,
+            amount: parseFloat(document.getElementById("amount").value)
+        };
+        saveUser(user);
+        document.getElementById("createMsg").innerHTML = "<span class='success'>Account created! You may now login.</span>";
+        document.getElementById("accountForm").reset();
+    };
+
+    // Login
+    document.getElementById("loginForm").onsubmit = function(e){
+        e.preventDefault();
+        let email = document.getElementById("loginEmail").value,
+            pin = document.getElementById("loginPin").value;
+        let u = getUser();
+        if(u && u.email == email && u.pin == pin){
+            loggedIn = true;
+            document.getElementById("loginMsg").innerHTML = "";
+            showSection("userInfoDiv");
+        } else {
+            document.getElementById("loginMsg").innerHTML = "<span class='error'>Invalid email or pin!</span>";
+        }
+    };
+
+    function showUserInfo(){
+        let u=getUser();
+        document.getElementById("userInfo").innerHTML = `
+            <b>Name:</b> ${u.name}<br>
+            <b>Age:</b> ${u.age}<br>
+            <b>Address:</b> ${u.address}<br>
+            <b>Email:</b> ${u.email}<br>
+            <b>Phone:</b> ${u.phone}<br>
+            <b>ATM Pin:</b> ${u.pin.replace(/./g,'*')}<br>
+            <b>Balance:</b> ₹${u.amount.toFixed(2)}
+        `;
+    }
+
+    document.getElementById("pinForm").onsubmit = function(e){
+        e.preventDefault();
+        let u = getUser();
+        let oldPin = document.getElementById("oldPin").value,
+            newPin = document.getElementById("newPin").value;
+        if(u.pin === oldPin){
+            u.pin = newPin;
+            saveUser(u);
+            document.getElementById("pinMsg").innerHTML = "<span class='success'>Pin updated!</span>";
+            document.getElementById("pinForm").reset();
+            showUserInfo();
+        } else {
+            document.getElementById("pinMsg").innerHTML = "<span class='error'>Old pin is wrong.</span>";
+        }
+    };
+
+    document.getElementById("depositForm").onsubmit = function(e){
+        e.preventDefault();
+        let u = getUser();
+        let amt = parseFloat(document.getElementById("depositAmt").value);
+        if(amt>0){
+            u.amount += amt;
+            saveUser(u);
+            document.getElementById("depositMsg").innerHTML = `<span class='success'>₹${amt.toFixed(2)} deposited.</span>`;
+            document.getElementById("depositForm").reset();
+            showUserInfo();
+        }
+    };
+
+    document.getElementById("withdrawForm").onsubmit = function(e){
+        e.preventDefault();
+        let u = getUser();
+        let amt = parseFloat(document.getElementById("withdrawAmt").value);
+        if(amt>0 && amt<=u.amount){
+            u.amount -= amt;
+            saveUser(u);
+            document.getElementById("withdrawMsg").innerHTML = `<span class='success'>₹${amt.toFixed(2)} withdrawn.</span>`;
+            document.getElementById("withdrawForm").reset();
+            showUserInfo();
+        } else {
+            document.getElementById("withdrawMsg").innerHTML = "<span class='error'>Invalid amount!</span>";
+        }
+    };
+
+    function enableField(){
+        let sel = document.getElementById('fieldSelect').value;
+        ["updateName","updateAge","updateAddress","updatePhone"].forEach(id=>{
+            document.getElementById(id).disabled = true;
+            document.getElementById(id).value = '';
+        });
+        if(sel){ document.getElementById('update'+capitalize(sel)).disabled = false;}
+    }
+    function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+    function resetDetailsForm(){
+        document.getElementById('fieldSelect').value = '';
+        enableField();
+        document.getElementById('detailsMsg').innerHTML = '';
+    }
+    document.getElementById("detailsForm").onsubmit = function(e){
+        e.preventDefault();
+        let u = getUser();
+        let sel = document.getElementById('fieldSelect').value;
+        if(!sel) return;
+        let fld = 'update'+capitalize(sel);
+        let val = document.getElementById(fld).value.trim();
+        if(val.length){
+            u[sel] = val;
+            saveUser(u);
+            document.getElementById("detailsMsg").innerHTML = `<span class='success'>${capitalize(sel)} updated!</span>`;
+            showUserInfo();
+            enableField();
+        }else{
+            document.getElementById("detailsMsg").innerHTML = `<span class='error'>Please enter a valid value.</span>`;
+        }
+    };
+
+    </script>
+</body>
+</html>
